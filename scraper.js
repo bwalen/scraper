@@ -4,6 +4,9 @@ var _ = require("./underscore.js");
 
 var url = "http://www.reddit.com";
 
+getText(url);
+getLinks(url);
+
 function getText(url){
   var text = [];
   request(url, function(error, response, body){
@@ -23,9 +26,14 @@ function getLinks(url){
     if(!error){
       var $ = cheerio.load(body);
       $("a").each(function(i, element){
-        linkElements[i] = $(this).attr("href");
+        if($(this).attr("href") && $(this).attr("href")[0] == "h"){
+          linkElements[i] = $(this).attr("href");
+        }
+        else{
+          linkElements[i] = url + $(this).attr("href");
+        }
       });
     }
   })
-  return linkElements;
+return linkElements;
 }
