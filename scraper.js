@@ -3,7 +3,7 @@ var cheerio = require("cheerio");
 var _ = require("./underscore.js");
 var _string = require("./underscore.string.min.js");
 
-var url = "http://www.foxnews.com";
+var url = "http://www.reddit.com";
 
 getLinks(url);
 
@@ -20,23 +20,30 @@ function getText(url){
     }
     console.log(_string.clean(_.uniq(text).join(" ")));
   })
-  //return text;
 }
 
 function getLinks(url){
   var linkElements = [];
-  request(url, function(error, response, body){
-    if(!error){
-      var $ = cheerio.load(body);
-      $("a").each(function(i, element){
-        if($(this).attr("href") && $(this).attr("href")[0] == "h"){
-          linkElements[i] = $(this).attr("href");
-        }
-        else{
-          linkElements[i] = url + $(this).attr("href");
-        }
-        linkElements = _.uniq(linkElements);
-      });
+  var promise = new Promise(function(resolve, reject){
+    request(url, function(error, response, body){
+      if(!error && response.statusCode == 200){
+        var $ = cheerio.load(body);
+        $("a").each(function(i, element){
+          if($(this).attr("href") && $(this).attr("href")[0] == "h"){
+            linkElements[i] = $(this).attr("href");
+          }
+          else{
+            linkElements[i] = url + $(this).attr("href");
+          }
+          linkElements = _.uniq(linkElements);
+          resolve("complete");
+        });
+      }
+    });
+  })
+  promise.then(function(result){
+    for(var i = 0; i < linkElements.length; i++){
+      getText(linkElements[i]);
     }
-  });
+  })
 }
