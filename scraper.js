@@ -39,7 +39,6 @@ function getLinks(url){
             linkElements[i] = url + $(this).attr("href");
           }
           linkElements = _.uniq(linkElements);
-          console.log(linkElements);
           resolve("complete");
         });
       }
