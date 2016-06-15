@@ -10,7 +10,7 @@ getLinks(url);
 function cleanWords(word){
   word = word.toLowerCase();
   for(var i = 0; i < word.length; i++){
-    if (word[i] == "."){
+    if (word[i] == "."|| word[i] == ":" || word[i] == "+"){
       word = _string.splice(word,i,1,"");
     }
   }
@@ -22,14 +22,13 @@ function getText(url){
   request(url, function(error, response, body){
     if(!error && response.statusCode == 200){
       var $ = cheerio.load(body);
-      $("p, li, ul, ol, span, article, blockquote, h1, h2, h3, h4, h5, h6").each(function(i, element){
+      $("p, li, ul, ol, span, article, blockquote, div").each(function(i, element){
         if($(this).text().length > 12){
           text[i] = $(this).text();
         }
       })
     }
     var wordsArray = _string.words(_string.clean(_.uniq(text).join(" ")));
-    //console.log(wordsArray);
     for (var i = 0; i < wordsArray.length; i++ ){
       console.log(cleanWords(wordsArray[i]));
     }
