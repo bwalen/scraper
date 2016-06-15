@@ -3,9 +3,19 @@ var cheerio = require("cheerio");
 var _ = require("./underscore.js");
 var _string = require("./underscore.string.min.js");
 
-var url = "http://www.imgur.com";
+var url = "http://www.cnn.com";
 
 getLinks(url);
+
+function cleanWords(word){
+  word = word.toLowerCase();
+  for(var i = 0; i < word.length; i++){
+    if (word[i] == "."){
+      word = _string.splice(word,i,1,"");
+    }
+  }
+  return word;
+}
 
 function getText(url){
   var text = [];
@@ -18,7 +28,11 @@ function getText(url){
         }
       })
     }
-    console.log(_string.words(_string.clean(_.uniq(text).join(" "))));
+    var wordsArray = _string.words(_string.clean(_.uniq(text).join(" ")));
+    //console.log(wordsArray);
+    for (var i = 0; i < wordsArray.length; i++ ){
+      console.log(cleanWords(wordsArray[i]));
+    }
   })
 }
 
