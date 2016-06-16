@@ -62,13 +62,13 @@ function getLinks(url){
         var $ = cheerio.load(body);
         $("a").each(function(i, element){
           if($(this).attr("href") && $(this).attr("href")[0] == "h") {
-            linkElements[i] = $(this).attr("href");
+            linkElements.push($(this).attr("href"));
           }
           else if($(this).attr("href") && $(this).attr("href")[0] == "/" && $(this).attr("href")[1] == "/"){
-            linkElements[i] = "http:" + $(this).attr("href");
+            linkElements.push("http:" + $(this).attr("href"));
           }
           else{
-            linkElements[i] = url + $(this).attr("href");
+            linkElements.push(url + $(this).attr("href"));
           }
           linkElements = _.uniq(linkElements);
           resolve("complete");
@@ -78,7 +78,7 @@ function getLinks(url){
   })
   promise.then(function(result){
     for(var i = 0; i < linkElements.length; i++){
-      getText(linkElements[i]);
+      getTitle(linkElements[i]);
     }
   })
 }
