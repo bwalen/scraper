@@ -38,6 +38,22 @@ function getText(url){
   })
 }
 
+function getTitle(newLink){
+  var title;
+  request(newLink, function(error, response, body){
+    if(!error && response.statusCode == 200){
+      var $ = cheerio.load(body);
+      title = $("title").text();
+      console.log("----" + title + "----");
+      $("meta").each(function(i, element){
+        if( $(this).attr("name") == "description" ){
+          console.log($(this).attr("content"));
+        }
+      })
+    }
+  })
+}
+
 function getLinks(url){
   var linkElements = [];
   var promise = new Promise(function(resolve, reject){
