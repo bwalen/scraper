@@ -9,9 +9,12 @@ getLinks(url);
 
 function cleanWords(word){
   word = word.toLowerCase();
+  var charactersToRemove = [".",":",",","+","(",")"];
   for(var i = 0; i < word.length; i++){
-    if (word[i] == "."|| word[i] == ":" || word[i] == "+"){
-      word = _string.splice(word,i,1,"");
+    for(var j = 0; j < charactersToRemove.length; j++){
+      if (word[i] == charactersToRemove[j] ){
+        word = _string.splice(word,i,1,"");
+      }
     }
   }
   return word;
