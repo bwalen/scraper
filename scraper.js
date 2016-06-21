@@ -41,22 +41,24 @@ function getText(url){
 function getTitle(newLink){
   var articleTitle;
   var articleDescription;
-  request(newLink, function(error, response, body){
-    if(!error && response.statusCode == 200){
-      var $ = cheerio.load(body);
-      if($("title").text()){
-        articleTitle = $("title").text();
-      }
-      $("meta").each(function(i, element){
-        if( $(this).attr("name") == "description" ){
-          articleDescription = $(this).attr("content");
+  var articleObject;
+  var promise;
+  return new Promise(function(resolve, reject){
+    request(newLink, function(error, response, body){
+      if(!error && response.statusCode == 200){
+        var $ = cheerio.load(body);
+        if($("title").text()){
+          articleTitle = $("title").text();
         }
-      });
-    }
+        $("meta").each(function(i, element){
+          if( $(this).attr("name") == "description" ){
+            articleDescription = $(this).attr("content");
+          }
+        });
+        resolve({url: newLink, title: articleTitle, description: articleDescription});
+      }
+    })
   })
-  if(articleTitle != undefined && articleDescription != undefined){
-    return {title: articleTitle, description: articleDescription};
-  }
 }
 
 function getLinks(url){
@@ -77,6 +79,7 @@ function getLinks(url){
             linkElements.push(url + $(this).attr("href"));
           }
           linkElements = _.uniq(linkElements);
+          console.log(linkElements);
           resolve("complete");
         });
       }
@@ -85,8 +88,9 @@ function getLinks(url){
   promise.then(function(result){
     var pageTitleDescription;
     for(var i = 0; i < linkElements.length; i++){
-      pageTitleDescription = getTitle(linkElements[i]);
-      articleData.push({address:linkElements[i], title: pageTitleDescription.title, description: pageTitleDescription.description});
+    getTitle(linkElements[i]).then(function(data){
+      console.log(data);
+    });
     }
   })
 }
