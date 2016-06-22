@@ -33,7 +33,6 @@ function getText(url){
     }
     var wordsArray = _string.words(_string.clean(_.uniq(text).join(" ")));
     for (var i = 0; i < wordsArray.length; i++ ){
-      console.log(cleanWords(wordsArray[i]));
     }
   })
 }
@@ -41,8 +40,6 @@ function getText(url){
 function getTitle(newLink){
   var articleTitle;
   var articleDescription;
-  var articleObject;
-  var promise;
   return new Promise(function(resolve, reject){
     request(newLink, function(error, response, body){
       if(!error && response.statusCode == 200){
@@ -55,7 +52,15 @@ function getTitle(newLink){
             articleDescription = $(this).attr("content");
           }
         });
-        resolve({url: newLink, title: articleTitle, description: articleDescription});
+        if(articleTitle != undefined && articleDescription != undefined){
+            resolve({url: newLink, title: articleTitle, description: articleDescription});
+        }
+        else{
+          reject("not enough data retrieved");
+        }
+      }
+      else{
+        reject("404");
       }
     })
   })
@@ -79,17 +84,18 @@ function getLinks(url){
             linkElements.push(url + $(this).attr("href"));
           }
           linkElements = _.uniq(linkElements);
-          console.log(linkElements);
           resolve("complete");
         });
       }
     });
   })
   promise.then(function(result){
-    var pageTitleDescription;
+    var wordsArray = [];
     for(var i = 0; i < linkElements.length; i++){
     getTitle(linkElements[i]).then(function(data){
-      console.log(data);
+      for(var j = 0; j < _.uniq(_string.words(data.title)).length; j++){
+        wordsArray.push(_.uniq(_string.words(data.title)));
+      }
     });
     }
   })
