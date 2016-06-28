@@ -97,10 +97,17 @@ function getLinks(url){
     });
   })
   promise.then(function(result){
+    connection.connect(function(err){
+      if (err) {
+        console.error('error connecting: ' + err.stack);
+        return;
+      }
+      console.log('connected as id ' + connection.threadId);
+    });
     var wordsArray = [];
     for(var i = 0; i < linkElements.length; i++){
     getTitle(linkElements[i]).then(function(data){
-
+      console.log(data);
     });
     }
   })
