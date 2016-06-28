@@ -2,6 +2,13 @@ var request = require("request");
 var cheerio = require("cheerio");
 var _ = require("./underscore.js");
 var _string = require("./underscore.string.min.js");
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'user3',
+  password : 'MySQL',
+  database : 'url_data'
+});
 
 var url = "http://www.cnn.com";
 
@@ -93,9 +100,7 @@ function getLinks(url){
     var wordsArray = [];
     for(var i = 0; i < linkElements.length; i++){
     getTitle(linkElements[i]).then(function(data){
-      for(var j = 0; j < _.uniq(_string.words(data.title)).length; j++){
-        wordsArray.push(_.uniq(_string.words(data.title)));
-      }
+
     });
     }
   })
