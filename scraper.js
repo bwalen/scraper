@@ -106,9 +106,19 @@ function getLinks(url){
     });
     var wordsArray = [];
     for(var i = 0; i < linkElements.length; i++){
-    getTitle(linkElements[i]).then(function(data){
-      console.log(data);
-    });
+      getTitle(linkElements[i]).then(function(data, err){
+        var article = {url: data.url, title: data.title, description: data.description};
+        connection.query("insert into url set ?", article, function(error, result){
+          if(error){
+            console.log(error);
+          }
+        })
+      });
     }
   })
+  setTimeout(function(){
+    connection.end(function(err){
+      console.log("connection closed");
+    });
+  }, 60000);
 }
