@@ -16,7 +16,7 @@ getLinks(url);
 
 function cleanWords(word){
   word = word.toLowerCase();
-  var charactersToRemove = [".",":",",","+","(",")"];
+  var charactersToRemove = [".",":",",","+","(",")","'"," "];
   for(var i = 0; i < word.length; i++){
     for(var j = 0; j < charactersToRemove.length; j++){
       if (word[i] == charactersToRemove[j] ){
@@ -27,21 +27,11 @@ function cleanWords(word){
   return word;
 }
 
-function getText(url){
-  var text = [];
-  request(url, function(error, response, body){
-    if(!error && response.statusCode == 200){
-      var $ = cheerio.load(body);
-      $("p, li, ul, ol, span, article, blockquote, div").each(function(i, element){
-        if($(this).text().length > 12){
-          text[i] = $(this).text();
-        }
-      })
-    }
-    var wordsArray = _string.words(_string.clean(_.uniq(text).join(" ")));
-    for (var i = 0; i < wordsArray.length; i++ ){
-    }
-  })
+function toWords(pageTitle){
+  var wordsArray = _string.words(pageTitle, " ");
+  for(var i = 0; i < wordsArray.length; i++){
+    console.log(cleanWords(wordsArray[i]));
+  }
 }
 
 function getTitle(newLink){
@@ -104,7 +94,6 @@ function getLinks(url){
       }
       console.log('connected as id ' + connection.threadId);
     });
-    var wordsArray = [];
     for(var i = 0; i < linkElements.length; i++){
       getTitle(linkElements[i]).then(function(data, err){
         var article = {url: data.url, title: data.title, description: data.description};
