@@ -28,10 +28,18 @@ function cleanWords(word){
 }
 
 function toWords(pageTitle){
+  var filterWords = ["to", "the", "a", "an", "or","are","of","in","that","on"];
   var wordsArray = _string.words(pageTitle, " ");
   for(var i = 0; i < wordsArray.length; i++){
-    console.log(cleanWords(wordsArray[i]));
+    wordsArray[i] = cleanWords(cleanWords(wordsArray[i]));
+    for(var j = 0; j < filterWords.length; j++){
+      if(wordsArray[i] == filterWords[j]){
+        wordsArray.splice(i,1);
+        j=0;
+      }
+    }
   }
+  return(wordsArray);
 }
 
 function getTitle(newLink){
