@@ -14,8 +14,8 @@ var url = "http://www.cnn.com";
 
 getLinks(url);
 
-function cleanWords(word){
-  word = word.toLowerCase();
+function cleanWords(inputWord){
+  var word = inputWord.toLowerCase();
   var charactersToRemove = [".",":",",","+","(",")","'"," "];
   for(var i = 0; i < word.length; i++){
     for(var j = 0; j < charactersToRemove.length; j++){
@@ -31,15 +31,16 @@ function toWords(pageTitle){
   var filterWords = ["to", "the", "a", "an", "or","are","of","in","that","on"];
   var wordsArray = _string.words(pageTitle, " ");
   for(var i = 0; i < wordsArray.length; i++){
-    wordsArray[i] = cleanWords(cleanWords(wordsArray[i]));
+    wordsArray[i] = cleanWords(wordsArray[i]);
     for(var j = 0; j < filterWords.length; j++){
       if(wordsArray[i] == filterWords[j]){
         wordsArray.splice(i,1);
+        i--;
         j=0;
       }
     }
   }
-  return(wordsArray);
+  console.log(wordsArray);
 }
 
 function getTitle(newLink){
