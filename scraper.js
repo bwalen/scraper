@@ -27,7 +27,7 @@ function cleanWords(inputWord){
   return word;
 }
 
-function toWords(pageTitle){
+function toWords(pageTitle, pageUrl){
   var filterWords = ["to", "the", "a", "an", "or","are","of","in","that","on"];
   var wordsArray = _string.words(pageTitle, " ");
   for(var i = 0; i < wordsArray.length; i++){
@@ -40,7 +40,14 @@ function toWords(pageTitle){
       }
     }
   }
-  console.log(wordsArray);
+  for(var i = 0; i < wordsArray.length; i++){
+    var databaseWord = {word: wordsArray[i], url:pageUrl};
+    connection.query("insert into word set ?", databaseWord, function(error, result){
+      if(error){
+        console.log(error);
+      }
+    });
+  }
 }
 
 function getTitle(newLink){
@@ -111,6 +118,8 @@ function getLinks(url){
             console.log(error);
           }
         })
+        toWords(data.title, data.url);
+        toWords(data.description, data.url);
       });
     }
   })
