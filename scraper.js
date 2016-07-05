@@ -16,7 +16,7 @@ getLinks(url);
 
 function cleanWords(inputWord){
   var word = inputWord.toLowerCase();
-  var charactersToRemove = [".",":",",","+","(",")","'"," "];
+  var charactersToRemove = [".",":",",","+","(",")","'"," ","|","•"];
   for(var i = 0; i < word.length; i++){
     for(var j = 0; j < charactersToRemove.length; j++){
       if (word[i] == charactersToRemove[j] ){
@@ -28,7 +28,7 @@ function cleanWords(inputWord){
 }
 
 function toWords(pageTitle, pageUrl){
-  var filterWords = ["to", "the", "a", "an", "or","are","of","in","that","on"];
+  var filterWords = ["to", "the", "a", "an", "or","are","of","in","that","on","is","and","for","our","at","is"];
   var wordsArray = _string.words(pageTitle, " ");
   for(var i = 0; i < wordsArray.length; i++){
     wordsArray[i] = cleanWords(wordsArray[i]);
