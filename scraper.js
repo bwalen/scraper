@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   database : 'url_data'
 });
 
-var url = "http://www.cnn.com";
+var url = "http://www.foxnews.com";
 
 getLinks(url);
 
@@ -66,7 +66,7 @@ function getTitle(newLink){
           }
         });
         if(articleTitle != undefined && articleDescription != undefined){
-            resolve({url: newLink, title: articleTitle, description: articleDescription});
+          resolve({url: newLink, title: articleTitle, description: articleDescription});
         }
         else{
           reject("not enough data retrieved");
@@ -111,15 +111,21 @@ function getLinks(url){
       console.log('connected as id ' + connection.threadId);
     });
     for(var i = 0; i < linkElements.length; i++){
-      getTitle(linkElements[i]).then(function(data, err){
-        var article = {url: data.url, title: data.title, description: data.description};
-        connection.query("insert into url set ?", article, function(error, result){
-          if(error){
-            console.log(error);
+      connection.query("SELECT * FROM url WHERE url =\"" + linkElements[i] + "\";", function(error,result){
+        if(!error){
+          if(result[0]==undefined){
+            getTitle(linkElements[i]).then(function(data, err){
+              var article = {url: data.url, title: data.title, description: data.description};
+              connection.query("insert into url set ?", article, function(error, result){
+                if(error){
+                  console.log(error);
+                }
+              })
+              toWords(data.title, data.url);
+              toWords(data.description, data.url);
+            })
           }
-        })
-        toWords(data.title, data.url);
-        toWords(data.description, data.url);
+        }
       });
     }
   })
